@@ -81,6 +81,25 @@ gitcheck <- function() {
 }
 gitcheck()
 
-system2("git", "init")
+git_commit <- function(projname, msg, add=".") {
+	gitcheck()
+	if (missing(msg)) {
+		stop("Please supply a short commit message")
+	}
+	od <- getwd()
+	on.exit(setwd(od))
+	system2("git", paste("add", paste(shQuote(add), collapse=" ")))
 
+}
+
+msg <- c("R/en a.r", "R/to to.txt")
+file.path(msg)
+setwd(projname)
+system2("git", "init")
+system2("git", "add ")
+
+comm <- "First commit"
+system2("git", paste("commit -m", shQuote(comm)))
+
+setwd("..")
 
