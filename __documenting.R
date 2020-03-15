@@ -1,11 +1,10 @@
 
-library(roxygen2)
-
-setwd("/Users/aksel.henriksen/Documents/R/prosjekter/")
-
 projname <- "projector"
-
+library(roxygen2)
+setwd("/Users/aksel.henriksen/Documents/R/prosjekter/")
 sapply(list.files(file.path(projname, "R"), full.names=TRUE), source)
+
+git_init(projname)
 
 roxygenize(projname)
 
@@ -16,3 +15,7 @@ r_manual()
 pkg_install(projname)
 library(projname, character.only=TRUE)
 
+git_commit(projname, "Zap all critical bugs")
+
+git_remote(projname, "AkselA/R-projector")
+git_push(projname)

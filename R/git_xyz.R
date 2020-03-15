@@ -25,17 +25,28 @@ github_check <- function(repo) {
 	}
 }
 
-git_init <- function(projname, msg="first commit", add=".") {
+git_init <- function(projname, msg="first commit", add=".", commit=TRUE) {
 	git_check()
 	od <- getwd()
 	on.exit(setwd(od))
 	setwd(projname)
     system2("git", "init")
 	system2("git", paste("add", paste(shQuote(add), collapse=" ")))
-    system2("git", paste("commit -m", shQuote(msg)))
+	if (commit) {
+        system2("git", paste("commit -m", shQuote(msg)))
+    }
 }
 
-git_commit <- function(projname, msg, add=".") {
+git_remote <- function(projname, repo) {
+	git_check()
+	github_check(repo)
+	od <- getwd()
+	on.exit(setwd(od))
+	setwd(projname)
+    system2("git", paste0("remote add origin git@github.com:", repo))
+}
+
+git_commit <- function(projname, msg, add=".", push=FALSE) {
 	git_check()
 	if (missing(msg)) {
 		stop("Please supply a short commit message")
@@ -45,18 +56,10 @@ git_commit <- function(projname, msg, add=".") {
 	setwd(projname)
 	system2("git", paste("add", paste(shQuote(add), collapse=" ")))
     system2("git", paste("commit -m", shQuote(msg)))
+    if (push) {
+        system2("git", "push -u origin master")
+    }
 }
-
-github_connect <- function(projname, repo) {
-	git_check()
-	github_check()
-	od <- getwd()
-	on.exit(setwd(od))
-	setwd(projname)
-    system2("git", paste0("remote add origin git@github.com:", repo))
-    system2("git", "push -u origin master")
-}
-
 
 git_push <- function(projname) {
 	od <- getwd()
