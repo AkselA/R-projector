@@ -25,11 +25,13 @@ github_check <- function(repo) {
 	}
 }
 
-git_init <- function(projname, msg="first commit", add=".", commit=TRUE) {
+git_init <- function(projname, add=".", ignore=c(".DS_Store", ".RData",
+  ".Rhistory", ".Rapp.history", ".Rproj.user"), commit=TRUE, msg="first commit") {
 	git_check()
 	od <- getwd()
 	on.exit(setwd(od))
 	setwd(projname)
+    cat(ignore, sep="\n", file=".gitignore")
     system2("git", "init")
 	system2("git", paste("add", paste(shQuote(add), collapse=" ")))
 	if (commit) {
