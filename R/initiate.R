@@ -1,4 +1,4 @@
-initiate <- function(projname, verbose=TRUE) {
+initiate <- function(projname, verbose=TRUE, git=TRUE, remote) {
     old.dir <- getwd()
     dir.create(projname)
     setwd(projname)
@@ -14,12 +14,12 @@ initiate <- function(projname, verbose=TRUE) {
     
     ### README
     readmetext <- paste(
-                  paste("#", projname), "An R project under development\n",
-                  "### Usage",
-                  "```R",
-                  "# put some example code here",
-                  "```  \n", sep="\n")
-    
+      paste("#", projname), "An R project under development\n",
+      "### Usage",
+      "```R",
+      "# put some example code here",
+      "```  \n", sep="\n"
+    )
     if (verbose) {
         message("README.md:")
         cat(readmetext)
@@ -27,21 +27,32 @@ initiate <- function(projname, verbose=TRUE) {
     cat(readmetext, file="README.md")
     
     ### __documenting
-    doctext <- paste0(
-      "setwd(\"", old.dir, "\")\n",
-      "\n",
-      "projname <- \"", projname, "\"\n",
-      "\n",
-      "# sapply(list.files(file.path(projname, \"R\"), full.names=TRUE), source)\n",
-      "\n",
-      "roxygenize(projname)\n",
-      "\n",
-      "pkg_data(projname)\n",
-      "pkg_objects(projname)\n",
-      "pkg_check(projname)\n",
-      "r_manual()\n",
-      "pkg_install(projname)\n",
-      "library(projname, character.only=TRUE)"
+    g1 <- ""
+    g2 <- ""
+    if (git) {
+    	g1 <- "\ngit_commit(projname, 'Zapped all critical bugs')\n" 
+    }
+
+    if (!missing(remote)) {
+    	g2 <- "git_push(projname)\n"
+    }
+    
+    doctext <- paste(
+      sprintf("setwd('%s')", old.dir),
+      sprintf("projname <- '%s'", projname),
+      "# sapply(list.files(file.path(projname, \"R\"), full.names=TRUE), source)",
+      "",
+      "roxygenize(projname)",
+      "",
+      "pkg_data(projname)",
+      "pkg_objects(projname)",
+      "pkg_check(projname)",
+      "r_manual()",
+      "pkg_install(projname)",
+      "library(projname, character.only=TRUE)",
+      g1,
+      g2,
+      sep="\n"
     )
     if (verbose) {
         message("\n__documenting.R:")
@@ -138,5 +149,13 @@ initiate <- function(projname, verbose=TRUE) {
         cat(doc_pack)
     }
     cat(doc_pack, file="R/0_doc_package.R")
+
+    if (git) {
+    	git_init(".") 
+    }
+
+    if (!missing(remote)) {
+    	git_remote(".", remote)
+    }
 
 }

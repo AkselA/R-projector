@@ -15,7 +15,7 @@ r_manual()
 pkg_install(projname)
 library(projname, character.only=TRUE)
 
-git_commit(projname, "Zap all critical bugs")
+git_commit(projname, "Zapped all critical bugs")
 
 git_remote(projname, "AkselA/R-projector")
 git_push(projname)
