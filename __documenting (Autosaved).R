@@ -15,6 +15,4 @@ r_manual()
 pkg_install(projname)
 library(projname, character.only=TRUE)
 
-git_commit(projname, "Updated initiate() to include git")
-
-git_push(projname)
+git_commit(projname, "Updated initiate() to include git", push=TRUE)
