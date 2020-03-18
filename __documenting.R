@@ -2,22 +2,23 @@
 projname <- "projector"
 library(roxygen2)
 library(remotes)
-setwd("/Users/aksel.henriksen/Documents/R/prosjekter/")
-sapply(list.files(file.path(projname, "R"), full.names=TRUE), source)
+setwd("/Users/aksel.henriksen/Documents/R/prosjekter/projector")
+sapply(list.files("R", full.names=TRUE), source)
 
-git_init(projname)
+git_init()
 
-roxygenize(projname)
-pkg_pdf(projname)
+roxygen2::roxygenize()
+pkg_pdf()
 
-pkg_data(projname)
-pkg_objects(projname)
-pkg_check(projname)
+pkg_data()
+pkg_objects()
+pkg_check()
 r_manual()
-pkg_install(projname)
+pkg_install()
+
 library(projname, character.only=TRUE)
 
-git_commit(projname, "Changed functions so they operate from pwd by default", push=TRUE)
+git_commit(msg="Testing functions from pwd", push=TRUE)
 remotes::install_github("AkselA/R-projector")
 
 
