@@ -17,9 +17,7 @@ r_manual()
 pkg_install(projname)
 library(projname, character.only=TRUE)
 
-promptPackage(projname, .libPaths())
-
-git_commit(projname, "Updated initiate() to include git", push=TRUE)
+git_commit(projname, "Changed functions so they operate from pwd by default", push=TRUE)
 remotes::install_github("AkselA/R-projector")
 
 
