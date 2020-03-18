@@ -135,9 +135,9 @@ initiate <- function(projname, verbose=TRUE, git=TRUE, remote) {
     cat(desc, file="NAMESPACE")
     
     ### R/0_<projname>-package.R
-    doc_pack <- paste0("#' ", projname, "\n",
+    doc_pack <- paste0("#' A short description of the package\n",
                        "#' \n",
-                       "#' A more detailed explanation/description of the package\n",
+                       "#' A more detailed description of the package\n",
                        "#' \n",
                        "#' @section Details:\n",
                        "#' Highligh central functions, quick-start guide, etc.\n",
