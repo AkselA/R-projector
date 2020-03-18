@@ -1,4 +1,11 @@
+
 data_obj <- function(projname, lib.loc=".") {
+	if (missing(projname)) {
+		odir <- getwd()
+		projname <- basename(odir)
+		on.exit(setwd(odir))
+		setwd(dirname(odir))
+	}
     pkgpath <- find.package(projname, lib.loc, quiet=TRUE)
     if (!length(pkgpath)) {
         stop("there is no package called '", projname, "'", domain=NA)
@@ -37,6 +44,12 @@ data_obj <- function(projname, lib.loc=".") {
 
 
 code_obj <- function(projname, lib.loc=".") {
+	if (missing(projname)) {
+		odir <- getwd()
+		projname <- basename(odir)
+		on.exit(setwd(odir))
+		setwd(dirname(odir))
+	}
     pkgpath <- find.package(projname, lib.loc, quiet=TRUE)
     if (!length(pkgpath)) {
         stop("there is no package called '", projname, "'", domain=NA)

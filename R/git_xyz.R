@@ -28,9 +28,11 @@ github_check <- function(repo) {
 git_init <- function(projname, add=".", ignore=c(".DS_Store", ".RData",
   ".Rhistory", ".Rapp.history", ".Rproj.user"), commit=TRUE, msg="first commit") {
 	git_check()
-	od <- getwd()
-	on.exit(setwd(od))
-	setwd(projname)
+    if (!missing(projname)) {
+		od <- getwd()
+		on.exit(setwd(od))
+		setwd(projname)
+	}
 	message(".gitignore:\n")
 	cat(ignore, sep="\n")
     cat(ignore, sep="\n", file=".gitignore")
@@ -44,9 +46,11 @@ git_init <- function(projname, add=".", ignore=c(".DS_Store", ".RData",
 git_remote <- function(projname, repo) {
 	git_check()
 	github_check(repo)
-	od <- getwd()
-	on.exit(setwd(od))
-	setwd(projname)
+    if (!missing(projname)) {
+		od <- getwd()
+		on.exit(setwd(od))
+		setwd(projname)
+	}
     system2("git", paste0("remote add origin git@github.com:", repo))
 }
 
@@ -55,9 +59,11 @@ git_commit <- function(projname, msg, add=".", push=FALSE) {
 	if (missing(msg)) {
 		stop("Please supply a short commit message")
 	}
-	od <- getwd()
-	on.exit(setwd(od))
-	setwd(projname)
+    if (!missing(projname)) {
+		od <- getwd()
+		on.exit(setwd(od))
+		setwd(projname)
+	}
 	system2("git", paste("add", paste(shQuote(add), collapse=" ")))
     system2("git", paste("commit -m", shQuote(msg)))
     if (push) {
@@ -66,8 +72,10 @@ git_commit <- function(projname, msg, add=".", push=FALSE) {
 }
 
 git_push <- function(projname) {
-	od <- getwd()
-	on.exit(setwd(od))
-	setwd(projname)
+    if (!missing(projname)) {
+		od <- getwd()
+		on.exit(setwd(od))
+		setwd(projname)
+	}
     system2("git", "push -u origin master")
 }

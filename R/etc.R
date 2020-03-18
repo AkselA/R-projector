@@ -1,6 +1,12 @@
 
 # Read DESCRIPTION file
 descr <- function(projname, quiet=FALSE) {
+	if (missing(projname)) {
+		odir <- getwd()
+		projname <- basename(odir)
+		on.exit(setwd(odir))
+		setwd(dirname(odir))
+	}
     if (!dir.exists(projname)) {
         stop(paste("Could not find", projname, "in current directory"))
     }
@@ -31,6 +37,12 @@ params <- function(fun, to.clipboard=TRUE) {
 buildignore <- function(projname, add=FALSE, 
   pat=c("^commit\\.command$", "\\.Rproj$", "^__.*", "^\\.DS_Store$"),
   verbose=TRUE) {
+	if (missing(projname)) {
+		odir <- getwd()
+		projname <- basename(odir)
+		on.exit(setwd(odir))
+		setwd(dirname(odir))
+	}
     bignore.path <- file.path(projname, ".Rbuildignore") 
     if (!file.exists(bignore.path)) {
         file.create(bignore.path)

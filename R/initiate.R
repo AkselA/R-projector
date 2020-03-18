@@ -2,15 +2,14 @@ initiate <- function(projname, verbose=TRUE, git=TRUE, remote) {
     old.dir <- getwd()
     dir.create(projname)
     setwd(projname)
+    on.exit(setwd(old.dir))
     
     l <- lapply(c("data", "man", "R", "exec", "inst"), dir.create)
     
     # imports <- installed.packages(, "high")[, c(1, 4)]
     # imports <- imports[imports[,"Priority"] == "base", "Package"]
     # imports <- imports[imports != "base"]
-    imports <- "utils"
-    
-    
+    imports <- "utils"    
     
     ### README
     readmetext <- paste(
@@ -20,6 +19,7 @@ initiate <- function(projname, verbose=TRUE, git=TRUE, remote) {
       "# put some example code here",
       "```  \n", sep="\n"
     )
+
     if (verbose) {
         message("README.md:")
         cat(readmetext)
@@ -30,11 +30,14 @@ initiate <- function(projname, verbose=TRUE, git=TRUE, remote) {
     g1 <- ""
     g2 <- ""
     if (git) {
-    	g1 <- "\ngit_commit(projname, 'Zapped all critical bugs')\n" 
+        g1 <- "\ngit_commit(projname, 'Zapped all critical bugs')\n" 
     }
 
     if (!missing(remote)) {
-    	g2 <- "git_push(projname)\n"
+        g2 <- paste(
+          "git_push(projname)", 
+          sprintf("remotes::install_github('%s')", remote),
+          sep="\n")
     }
     
     doctext <- paste(
@@ -42,7 +45,7 @@ initiate <- function(projname, verbose=TRUE, git=TRUE, remote) {
       sprintf("projname <- '%s'", projname),
       "# sapply(list.files(file.path(projname, \"R\"), full.names=TRUE), source)",
       "",
-      "roxygenize(projname)",
+      "roxygen::roxygenize(projname)",
       "",
       "pkg_data(projname)",
       "pkg_objects(projname)",
@@ -54,6 +57,7 @@ initiate <- function(projname, verbose=TRUE, git=TRUE, remote) {
       g2,
       sep="\n"
     )
+
     if (verbose) {
         message("\n__documenting.R:")
         cat(doctext)
@@ -99,7 +103,7 @@ initiate <- function(projname, verbose=TRUE, git=TRUE, remote) {
     
     desc <- paste0(
         "Package: ", projname, "\n",
-        "Version: 0.1\n",
+        "Version: 0.1.0.9000\n",
         "Date: ", Sys.Date(), "\n",
         tools::toTitleCase(paste(
         "Title: what", projname, "is (one line, title case required)\n")),
@@ -130,32 +134,34 @@ initiate <- function(projname, verbose=TRUE, git=TRUE, remote) {
     }
     cat(desc, file="NAMESPACE")
     
-    ### R/0_doc_package.R
-    doc_pack <- paste0("#' ", projname, ": A short description of the package.\n",
+    ### R/0_<projname>-package.R
+    doc_pack <- paste0("#' ", projname, "\n",
                        "#' \n",
                        "#' A more detailed explanation/description of the package\n",
                        "#' \n",
-                       "#' @section ", projname, " functions:\n",
-                       "#' \\code{\\link{function1}} Short description\n",
-                       "#' \\code{\\link{function2}} Short description\n",
+                       "#' @section Details:\n",
+                       "#' Highligh central functions, quick-start guide, etc.\n",
+                       "#' \n",
+                       "#' @section ", projname, " contributors:\n",
                        "#' \n",
                        "#' @docType package\n",
-                       "#' @name ", projname, "\n",
+                       "#' @name ", projname, "-package\n",
+                       "#' @rdname ", projname, "\n",
                        "\n",
                        "NULL\n\n")
     
     if (verbose) {
-        message("\nR/0_doc_package.R:")
+        message("\nR/0_", projname, "-package.R:")
         cat(doc_pack)
     }
-    cat(doc_pack, file="R/0_doc_package.R")
+    cat(doc_pack, file=sprintf("R/0_%s-package.R", projname))
 
     if (git) {
-    	git_init(".") 
+        git_init(".") 
     }
 
     if (!missing(remote)) {
-    	git_remote(".", remote)
+        git_remote(".", remote)
     }
 
 }

@@ -2,6 +2,12 @@
 # into data files available through data()
 # by saving them as .rda files in "projname"/data
 pkg_data <- function(projname, add=TRUE) {
+	if (missing(projname)) {
+		odir <- getwd()
+		projname <- basename(odir)
+		on.exit(setwd(odir))
+		setwd(dirname(odir))
+	}
     if (!dir.exists(projname)) {
         stop(paste("Could not find", projname, "in current directory"))
     }
@@ -10,10 +16,12 @@ pkg_data <- function(projname, add=TRUE) {
         stop(paste("Could not find", datapath))
     }
     datadir <- file.path(projname, "data")
+    if (!dir.exists(datadir)) {
+    	dir.create(datadir)
+    }
     if (!add) {
         unlink(datadir, recursive=TRUE)
     }
-    dir.create(file.path(projname, "data"), showWarnings=FALSE)
     tmp.env <- new.env()
     source(datapath, local=tmp.env)
     tmp.list <- as.list(tmp.env, sorted=TRUE)
@@ -33,19 +41,20 @@ pkg_data <- function(projname, add=TRUE) {
 
 # Create and show documentation PDF
 pkg_pdf <- function(projname, popt="--force") {
-    if (!dir.exists(projname)) {
-        stop(paste("Could not find", projname, "in current directory"))
+    if (!missing(projname)) {
+	    if (!dir.exists(projname)) {
+	        stop(paste("Could not find", projname, "in current directory"))
+	    }
+        owd <- getwd()
+    	on.exit(setwd(owd))
+        setwd(projname)
     }
-    owd <- getwd()
-    popts <- paste(popt, collapse=" ")
 
     R <- file.path(R.home("bin"), "R")
-    pkg <- file.path(owd, projname) 
-    parg <- paste("CMD", "Rd2pdf", popts, shQuote(pkg))
 
-    setwd(projname)
+    popts <- paste(popt, collapse=" ")
+    parg <- paste("CMD", "Rd2pdf", popts, shQuote(getwd()))
     system2(R, parg)
-    setwd(owd)
 }
 
 #' Bild and run diagnostic checks on the package
@@ -60,6 +69,12 @@ pkg_pdf <- function(projname, popt="--force") {
 
 pkg_check <- function(projname, bopt=c("--no-manual"), 
   copt=c("--no-manual", "--timings"), ropt=c("--vanilla"), rm.src=TRUE) {
+	if (missing(projname)) {
+		odir <- getwd()
+		projname <- basename(odir)
+		on.exit(setwd(odir))
+		setwd(dirname(odir))
+	}
     if (!dir.exists(projname)) {
         stop(paste("Could not find", projname, "from current directory"))
     }
@@ -70,18 +85,19 @@ pkg_check <- function(projname, bopt=c("--no-manual"),
         outdir <- tempdir()
         copt <- c(copt, paste0("--output=", outdir))
     }
-    bopts <- paste(bopt, collapse=" ")
-    copts <- paste(copt, collapse=" ")
     
     pkg <- file.path(getwd(), projname)
     dcr <- descr(projname, quiet=TRUE)
     tgz <- paste0(dcr["Package"], "_", dcr["Version"], ".tar.gz")
     R <- file.path(R.home("bin"), "R")
+    ropts <- paste(ropt, collapse=" ")
     
-    barg <- paste(ropt, "CMD", "build", bopts, shQuote(pkg))
+    bopts <- paste(bopt, collapse=" ")
+    barg <- paste(ropts, "CMD", "build", bopts, shQuote(pkg))
     system2(R, barg)
 
-    carg <- paste(ropt, "CMD", "check", copts, tgz)
+    copts <- paste(copt, collapse=" ")
+    carg <- paste(ropts, "CMD", "check", copts, tgz)
     system2(R, carg)
     
     if (rm.src) {
@@ -107,21 +123,27 @@ pkg_check <- function(projname, bopt=c("--no-manual"),
 
 pkg_install <- function(projname, bopt="", iopt="", ropt=c("--vanilla"),
   rm.src=TRUE) {
+	if (missing(projname)) {
+		odir <- getwd()
+		projname <- basename(odir)
+		on.exit(setwd(odir))
+		setwd(dirname(odir))
+	}
     if (!dir.exists(projname)) {
         stop(paste("Could not find", projname, "from current directory"))
     }
-
-    bopts <- paste(bopt, collapse=" ")
 
     pkg <- file.path(getwd(), projname)
     dcr <- descr(projname, quiet=TRUE)
     tgz <- paste0(dcr["Package"], "_", dcr["Version"], ".tar.gz")
     R <- file.path(R.home("bin"), "R")
     
+    bopts <- paste(bopt, collapse=" ")
     barg <- paste(ropt, "CMD", "build", bopts, shQuote(pkg))
     system2(R, barg)
 
-    iarg <- paste(ropt, "CMD", "INSTALL", iopt, tgz)
+    iopts <- paste(iopt, collapse=" ")
+    iarg <- paste(ropt, "CMD", "INSTALL", iopts, tgz)
     system2(R, iarg)
 
     if (rm.src) {
@@ -130,11 +152,17 @@ pkg_install <- function(projname, bopt="", iopt="", ropt=c("--vanilla"),
     }
 }
 
-pkg_detach <- function(projname) {
+pkg_detach <- function(projname=basename(getwd())) {
 	detach(paste0("package:", projname), character.only=TRUE)
 }
 
 pkg_objects <- function(projname) {
+	if (missing(projname)) {
+		odir <- getwd()
+		projname <- basename(odir)
+		on.exit(setwd(odir))
+		setwd(dirname(odir))
+	}
 	da <- cbind(data_obj(projname, lib.loc="."), folder="data",
 	  stringsAsFactors=FALSE)
 	co <- cbind(code_obj(projname, lib.loc="."), folder="R",
