@@ -1,7 +1,6 @@
 
 projname <- "projector"
-library(roxygen2)
-library(remotes)
+
 setwd("/Users/aksel.henriksen/Documents/R/prosjekter/projector")
 sapply(list.files("R", full.names=TRUE), source)
 

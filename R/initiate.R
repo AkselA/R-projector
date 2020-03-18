@@ -29,29 +29,30 @@ initiate <- function(projname, verbose=TRUE, git=TRUE, remote) {
     ### __documenting
     g1 <- ""
     g2 <- ""
-    if (git) {
-        g1 <- "\ngit_commit(projname, 'Zapped all critical bugs')\n" 
+    if (git | !missing(remote)) {
+        g1 <- "\ngit_commit(msg='Zapped all critical bugs')\n" 
     }
 
     if (!missing(remote)) {
         g2 <- paste(
-          "git_push(projname)", 
+          "git_push()", 
           sprintf("remotes::install_github('%s')", remote),
           sep="\n")
     }
     
     doctext <- paste(
-      sprintf("setwd('%s')", old.dir),
+      sprintf("setwd('%s')", getwd()),
       sprintf("projname <- '%s'", projname),
-      "# sapply(list.files(file.path(projname, \"R\"), full.names=TRUE), source)",
+      "# sapply(list.files('R', full.names=TRUE), source)",
       "",
       "roxygen::roxygenize(projname)",
+      "pkg_pdf()",
       "",
-      "pkg_data(projname)",
-      "pkg_objects(projname)",
-      "pkg_check(projname)",
+      "pkg_data()",
+      "pkg_objects()",
+      "pkg_check()",
       "r_manual()",
-      "pkg_install(projname)",
+      "pkg_install()",
       "library(projname, character.only=TRUE)",
       g1,
       g2,
@@ -157,11 +158,12 @@ initiate <- function(projname, verbose=TRUE, git=TRUE, remote) {
     cat(doc_pack, file=sprintf("R/0_%s-package.R", projname))
 
     if (git) {
-        git_init(".") 
+        git_init() 
     }
 
     if (!missing(remote)) {
-        git_remote(".", remote)
+        git_remote(repo=remote)
+        git_push()
     }
 
 }
