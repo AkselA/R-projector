@@ -33,9 +33,9 @@ git_init <- function(projname, add=".", ignore=c(".DS_Store", ".RData",
 		on.exit(setwd(od))
 		setwd(projname)
 	}
-	message(".gitignore:\n")
-	cat(ignore, sep="\n")
-    cat(ignore, sep="\n", file=".gitignore")
+	message(".gitignore:")
+	cat(ignore, "\n", sep="\n")
+    cat(ignore, "\n", sep="\n", file=".gitignore")
     system2("git", "init")
 	system2("git", paste("add", paste(shQuote(add), collapse=" ")))
 	if (commit) {
