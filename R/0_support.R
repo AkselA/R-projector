@@ -1,6 +1,6 @@
 
-data_obj <- function(projname, lib.loc=".") {
-	if (missing(projname)) {
+data_obj <- function(projname=".", lib.loc=".") {
+    if (projname == ".") {
 		odir <- getwd()
 		projname <- basename(odir)
 		on.exit(setwd(odir))
@@ -43,8 +43,8 @@ data_obj <- function(projname, lib.loc=".") {
 }
 
 
-code_obj <- function(projname, lib.loc=".") {
-	if (missing(projname)) {
+code_obj <- function(projname=".", lib.loc=".") {
+    if (projname == ".") {
 		odir <- getwd()
 		projname <- basename(odir)
 		on.exit(setwd(odir))

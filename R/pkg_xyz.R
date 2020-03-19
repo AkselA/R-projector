@@ -1,8 +1,8 @@
 # turns objects found in "projname"/data.R (project root)
 # into data files available through data()
 # by saving them as .rda files in "projname"/data
-pkg_data <- function(projname, add=TRUE) {
-	if (missing(projname)) {
+pkg_data <- function(projname=".", add=TRUE) {
+    if (projname == ".") {
 		odir <- getwd()
 		projname <- basename(odir)
 		on.exit(setwd(odir))
@@ -40,8 +40,8 @@ pkg_data <- function(projname, add=TRUE) {
 }
 
 # Create and show documentation PDF
-pkg_pdf <- function(projname, popt="--force") {
-    if (!missing(projname)) {
+pkg_pdf <- function(projname=".", popt="--force") {
+    if (projname != ".") {
 	    if (!dir.exists(projname)) {
 	        stop(paste("Could not find", projname, "in current directory"))
 	    }
@@ -67,9 +67,9 @@ pkg_pdf <- function(projname, popt="--force") {
 #' 
 #' @export 
 
-pkg_check <- function(projname, bopt=c("--no-manual"), 
+pkg_check <- function(projname=".", bopt=c("--no-manual"), 
   copt=c("--no-manual", "--timings"), ropt=c("--vanilla"), rm.src=TRUE) {
-	if (missing(projname)) {
+    if (projname == ".") {
 		odir <- getwd()
 		projname <- basename(odir)
 		on.exit(setwd(odir))
@@ -87,7 +87,7 @@ pkg_check <- function(projname, bopt=c("--no-manual"),
     }
     
     pkg <- file.path(getwd(), projname)
-    dcr <- descr(projname, quiet=TRUE)
+    dcr <- desc_read(projname, quiet=TRUE)
     tgz <- paste0(dcr["Package"], "_", dcr["Version"], ".tar.gz")
     R <- file.path(R.home("bin"), "R")
     ropts <- paste(ropt, collapse=" ")
@@ -121,9 +121,9 @@ pkg_check <- function(projname, bopt=c("--no-manual"),
 #' 
 #' @export
 
-pkg_install <- function(projname, bopt="", iopt="", ropt=c("--vanilla"),
+pkg_install <- function(projname=".", bopt="", iopt="", ropt=c("--vanilla"),
   rm.src=TRUE) {
-	if (missing(projname)) {
+    if (projname == ".") {
 		odir <- getwd()
 		projname <- basename(odir)
 		on.exit(setwd(odir))
@@ -134,7 +134,7 @@ pkg_install <- function(projname, bopt="", iopt="", ropt=c("--vanilla"),
     }
 
     pkg <- file.path(getwd(), projname)
-    dcr <- descr(projname, quiet=TRUE)
+    dcr <- desc_read(projname, quiet=TRUE)
     tgz <- paste0(dcr["Package"], "_", dcr["Version"], ".tar.gz")
     R <- file.path(R.home("bin"), "R")
     
@@ -156,8 +156,8 @@ pkg_detach <- function(projname=basename(getwd())) {
 	detach(paste0("package:", projname), character.only=TRUE)
 }
 
-pkg_objects <- function(projname) {
-	if (missing(projname)) {
+pkg_objects <- function(projname=".") {
+    if (projname == ".") {
 		odir <- getwd()
 		projname <- basename(odir)
 		on.exit(setwd(odir))

@@ -1,17 +1,17 @@
 Package: projector
 Version: 0.1.0
-Date: 2020-01-25
+Date: 2020-03-18
 Title: Projector Helps To Initiate And Develop R Packages
-Authors@R: person("Aksel", "Henriksen", email="abc@mail.com",
-                   role=c("aut", "cre"))
-Description: Projector is a more minimalistic and less extensive alternative
-             to devtools/pkgbuilds/pkgload/rcmdcheck for initializing and developing
-             R packages.
+Authors@R: person("Aksel", "Henriksen", email="abc@mail.com", role=c("aut",
+    "cre"))
+Description: Projector is a more minimalistic and less extensive alternative to
+    devtools/pkgbuilds/pkgload/rcmdcheck for initializing and developing R
+    packages.
 Depends: R (>= 3.5.0)
 Imports: utils
 Suggests: roxygen2, remotes
 License: GPL-3
-URL: https://www.homepage.org, http://www.another.url
+URL: https
 LazyData: true
 Encoding: UTF-8
 RoxygenNote: 6.1.1

@@ -4,8 +4,8 @@
 \alias{pkg_install}
 \title{Install a package}
 \usage{
-pkg_install(projname, bopt = "", iopt = "", ropt = c("--vanilla"),
-  rm.src = TRUE)
+pkg_install(projname = ".", bopt = "", iopt = "",
+  ropt = c("--vanilla"), rm.src = TRUE)
 }
 \arguments{
 \item{projname}{path to the project file}

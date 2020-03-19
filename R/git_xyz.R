@@ -25,10 +25,10 @@ github_check <- function(repo) {
 	}
 }
 
-git_init <- function(projname, add=".", ignore=c(".DS_Store", ".RData",
+git_init <- function(projname=".", add=".", ignore=c(".DS_Store", ".RData",
   ".Rhistory", ".Rapp.history", ".Rproj.user"), commit=TRUE, msg="first commit") {
 	git_check()
-    if (!missing(projname)) {
+    if (projname != ".") {
 		od <- getwd()
 		on.exit(setwd(od))
 		setwd(projname)
@@ -43,10 +43,10 @@ git_init <- function(projname, add=".", ignore=c(".DS_Store", ".RData",
     }
 }
 
-git_remote <- function(projname, repo) {
+git_remote <- function(projname=".", repo) {
 	git_check()
 	github_check(repo)
-    if (!missing(projname)) {
+    if (projname != ".") {
 		od <- getwd()
 		on.exit(setwd(od))
 		setwd(projname)
@@ -54,12 +54,12 @@ git_remote <- function(projname, repo) {
     system2("git", paste0("remote add origin git@github.com:", repo))
 }
 
-git_commit <- function(projname, msg, add=".", push=FALSE) {
+git_commit <- function(projname=".", msg, add=".", push=FALSE) {
 	git_check()
 	if (missing(msg)) {
 		stop("Please supply a short commit message")
 	}
-    if (!missing(projname)) {
+    if (projname != ".") {
 		od <- getwd()
 		on.exit(setwd(od))
 		setwd(projname)
@@ -71,8 +71,8 @@ git_commit <- function(projname, msg, add=".", push=FALSE) {
     }
 }
 
-git_push <- function(projname) {
-    if (!missing(projname)) {
+git_push <- function(projname=".") {
+    if (projname != ".") {
 		od <- getwd()
 		on.exit(setwd(od))
 		setwd(projname)

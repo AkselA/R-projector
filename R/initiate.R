@@ -1,4 +1,4 @@
-initiate <- function(projname, verbose=TRUE, git=TRUE, remote) {
+initiate <- function(projname, verbose=TRUE, git=FALSE, remote) {
     old.dir <- getwd()
     dir.create(projname)
     setwd(projname)
@@ -98,33 +98,32 @@ initiate <- function(projname, verbose=TRUE, git=TRUE, remote) {
     cat(imptext, file="R/0_imports.R")
     
     ### DESCRIPTION
-    imptext2 <- paste(
-                strwrap(
-                paste(imports, collapse=", "), 50, exdent=9), collapse="\n")
-    
-    desc <- paste0(
-        "Package: ", projname, "\n",
-        "Version: 0.1.0.9000\n",
-        "Date: ", Sys.Date(), "\n",
-        tools::toTitleCase(paste(
-        "Title: what", projname, "is (one line, title case required)\n")),
-        'Authors@R: person("First Name", "Last", email="abc@mail.com",\n',
-        '                   role=c("aut", "cre"))\n',
-        "Description: A (one paragraph) description of what ", projname, "\n",
-        "             does and why it may be useful.\n",
-        "Depends: R (>= ", getRversion(), ")\n",
-        "Imports: ", imptext2, "\n",
-        "Suggests: MASS\n",
-        "License: GPL-3\n",
-        "URL: https://www.homepage.org, http://www.another.url\n",
-        "LazyData: true\n",
-        "Encoding: UTF-8\n")
+
+    descv <- c(
+      Package = projname,
+      Version = "0.1.0.9000",
+      Date = as.character(Sys.Date()), 
+      Title = "What Projtest is (One Line, Title Case Required)", 
+      `Authors@R` = paste("person(\"First Name\", \"Last\",", 
+        "email=\"abc@mail.com\", role=c(\"aut\", \"cre\"))"),
+      Description = paste("A (one paragraph) description of what", projname,
+        "does and why it may be useful."), 
+      Depends = paste0("R (>= ", getRversion(), ")"),
+      Imports = paste(imports, collapse=", "),
+      Suggests = "MASS", 
+      License = "GPL-3",
+      URL = "http.example.com",
+      LazyData = "true",
+      Encoding = "UTF-8"
+    )
+
+    desc <- strwrap(paste0(names(descv), ": ", descv), 80, exdent=4)
     
     if (verbose) {
         message("\nDESCRIPTION:")
-        cat(desc)
+        cat(desc, sep="\n")
     }
-    cat(desc, file="DESCRIPTION")
+    cat(desc, sep="\n", file="DESCRIPTION")
     
     ### NAMESPACE
     nams <- paste0("import(", imports, ")\n")

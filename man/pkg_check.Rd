@@ -4,8 +4,9 @@
 \alias{pkg_check}
 \title{Bild and run diagnostic checks on the package}
 \usage{
-pkg_check(projname, bopt = c("--no-manual"), copt = c("--no-manual",
-  "--timings"), ropt = c("--vanilla"), rm.src = TRUE)
+pkg_check(projname = ".", bopt = c("--no-manual"),
+  copt = c("--no-manual", "--timings"), ropt = c("--vanilla"),
+  rm.src = TRUE)
 }
 \arguments{
 \item{projname}{path to the project file}
