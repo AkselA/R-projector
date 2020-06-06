@@ -2,4 +2,4 @@
 # By using add_data(), objects created here will be available
 # from the 'data/' folder
 
-y <- 1
+yyy <- 1:3

@@ -91,9 +91,30 @@ as.object_size <- function(x) {
 	x
 }
 
+size_units <- function(x, units="auto", standard="SI", ...){
+	class(x) <- "object_size"
+	format(x, units=units, standard=standard, ...)
+}
+
 envir.exists <- function(env) {
 	if (is.character(env)) {
 		env <- get(env)
 	}
     tryCatch(is.environment(env), error=function(e) FALSE)
 }
+
+person_call <- function(x) {
+	pp <- unclass(x)[[1]]
+	ll <- lengths(pp) > 1
+	pp <- lapply(pp, shQuote, type="cmd")
+	pp[ll] <- lapply(pp[ll], function(x) paste0("c(", paste(x, collapse=", "), ")"))
+
+    paste0("person(given=", pp$given, ", family=", pp$family,  
+      ", email=", pp$email, ", role=", pp$role, ", comment=", pp$comment, ")")
+}
+
+# g <- getOption("devtools.desc.author")
+# p <- person_call(as.person(g))
+# cat(p)
+# eval(parse(text=p))
+package?devtools

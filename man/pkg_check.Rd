@@ -2,7 +2,7 @@
 % Please edit documentation in R/pkg_xyz.R
 \name{pkg_check}
 \alias{pkg_check}
-\title{Bild and run diagnostic checks on the package}
+\title{Package check}
 \usage{
 pkg_check(projname = ".", bopt = c("--no-manual"),
   copt = c("--no-manual", "--timings"), ropt = c("--vanilla"),
@@ -11,14 +11,19 @@ pkg_check(projname = ".", bopt = c("--no-manual"),
 \arguments{
 \item{projname}{path to the project file}
 
-\item{bopt}{\code{R CMD build} options}
+\item{bopt}{a character vector, or space-delimited character string, of options
+to be passed to \code{\link{build}}. By default \code{--no-manual}}
 
-\item{copt}{\code{R CMD check} options}
+\item{copt}{a character vector, or space-delimited character string, of options
+to be passed to \code{\link{check}}. By default \code{--vanilla} to run in a baseline R
+session, reading no profile or environment files, and no saving of workspace}
 
-\item{ropt}{\code{R} options}
+\item{ropt}{a character vector, or space-delimited character string, of options
+to be passed to \code{R}. By default \code{--vanilla} to run in a baseline R
+session, reading no profile or environment files, and no saving of workspace}
 
 \item{rm.src}{remove source file}
 }
 \description{
-Bild and run diagnostic checks on the package
+Build and run diagnostic checks on the package
 }
